@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 import Parser from 'web-tree-sitter';
+import * as path from "path";
 
 // VSCode default token types and modifiers from:
 // https://code.visualstudio.com/api/language-extensions/semantic-highlight-guide#standard-token-types-and-modifiers
@@ -197,33 +198,28 @@ class SemanticTokensProvider implements vscode.DocumentSemanticTokensProvider {
 		return builder.build();
 	}
 }
-
+function defaults(lang: string): Config {
+	return {
+		lang: lang,
+		parser: path.join(__dirname, `../tree-sitter-${lang}/tree-sitter-${lang}.wasm`),
+		highlights: path.join(__dirname, `../queries/${lang}/highlights.scm`),
+		injections: path.join(__dirname, `../queries/${lang}/injections.scm`)
+	};
+}
 function parseConfigs(configs: any): Config[] {
 	if (!Array.isArray(configs)) {
 		throw new TypeError("Expected a list.");
 	}
-	return configs.map(config => {
-		const lang = config["lang"];
-		const parser = config["parser"];
-		const highlights = config["highlights"];
-		const injections = config["injections"];
-		if (typeof lang !== "string") {
-			throw new TypeError("Expected `lang` to be a string.");
-		}
-		if (typeof parser !== "string") {
-			throw new TypeError("Expected `parser` to be a string.");
-		}
-		if (typeof highlights !== "string") {
-			throw new TypeError("Expected `highlights` to be a string.");
-		}
-		if (injections !== undefined && typeof injections !== "string") {
-			throw new TypeError("Expected `injections` to be a string.");
-		}
-		return { lang, parser, highlights, injections };
+	configs = configs.map(config => {
+		return {...defaults(config["lang"]), ...config};
 	});
+	vscode.window.showInformationMessage("parsed configs");
+	console.log(configs);
+	return configs;
 }
 
 export function activate(context: vscode.ExtensionContext) {
+	vscode.window.showInformationMessage("loading dash extension!");
 	const rawConfigs = vscode.workspace.getConfiguration("tree-sitter-vscode").get("languageConfigs");
 	const configs = parseConfigs(rawConfigs);
 	const languageMap = configs.map(config => { return { language: config.lang }; });
@@ -231,7 +227,7 @@ export function activate(context: vscode.ExtensionContext) {
 		languageMap,
 		new SemanticTokensProvider(configs),
 		LEGEND,
-	)
+	);
 	context.subscriptions.push(provider);
 }
 

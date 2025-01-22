@@ -19,7 +19,8 @@
     "Programming Languages"
   ],
   "activationEvents": [
-    "onLanguage"
+    "onLanguage:python",
+    "onLanguage:javascript"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -30,9 +31,30 @@
           "tree-sitter-vscode.languageConfigs": {
             "description": "A list of objects with the keys \"lang\", \"parser\" and \"highlights\". Optionally, \"injections\" can be added.",
             "type": "array",
-            "default": []
+            "default": [
+              {
+                "lang": "python"
+              },
+              {
+                "lang": "javascript"
+              }
+            ]
           }
         }
+      }
+    ],
+    "languages": [
+      {
+        "id": "python",
+        "extensions": [
+          ".py"
+        ]
+      },
+      {
+        "id": "javascript",
+        "extensions": [
+          ".js"
+        ]
       }
     ]
   },
@@ -61,6 +83,7 @@
   },
   "dependencies": {
     "@vscode/vsce": "^2.24.0",
+    "vscode": "^1.1.37",
     "web-tree-sitter": "^0.21.0"
   }
 }
