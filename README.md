@@ -1,113 +1,58 @@
-# tree-sitter-vscode
+# vsc-dash
 
-Bring the power of Tree-sitter to VSCode!
+Make developing performant, highly interactive, scalable [Dash](https://dash.plotly.com/) 
+applications 10x less painful by adding zero-effort support for inline syntax highlighting of 
+`clientside_callback`s!
 
-## Description
+This project is a fork of [`tree-sitter-vscode`](https://github.com/AlecGhost/tree-sitter-vscode) by @AlecGhost, but it ships
+wasm binaries for [`tree-sitter-python`](https://github.com/tree-sitter/tree-sitter-python) and [`tree-sitter-javascript`](https://github.com/tree-sitter/tree-sitter-javascript),
+as well as some mildly adjusted highlights and injections. It is based on my [neovim plugin](https://github.com/ctdunc/nvim-dash)
+which provides similar functionality.
 
-This extension adds syntactic and semantic highlighting
-with [Tree-sitter](https://tree-sitter.github.io/) to Visual Studio Code.
+I also don't really use VS Code. I am packaging this for the benefit of my coworkers who do, and would
+welcome contributions/support from anyone who does end up using 
 
-By default, VSCode uses TextMate grammars for fast syntax highlighting
-and Language Servers for the more sophisticated semantic highlighting.
-TextMate grammars, however, are RegEx based
-and can therefore not fully represent most programming languages.
-A fully-fledged language server, on the other hand, is a lot of work, 
-and therefore might be too much effort for toy projects or DSLs.
-The middle-ground is, were Tree-sitter shines.
-It supports more powerful grammars, while still being easy to write.
-And it comes with the benefit, that injecting other languages is a breeze!
+- [Why not just use `assets/**/*.js`?](#why-not-just-use-assetsjs)
+- [Installation](#installation)
+- [Configuration Gotchas](#configuration-gotchas)
+    - [Color Schemes](#color-schemes)
+    - [Pylance](#pylance)
 
-What this extension does, is register a "semantic token provider" with VSCode,
-that executes a user-supplied Tree-sitter parser on the given file.
-The parsed tree is then queried for tokens which should be highlighted.
-The collected tokens are then given to VSCode with their highlighting information.
 
-Have a look at the [Tree-sitter homepage](https://tree-sitter.github.io/)
-to learn how to write a Tree-sitter grammar
-or skim through the list of the many available parsers ready to use.
+## Why not just use `assets/**/*.js`?
+I wrote about this in a [blog post](https://www.connorduncan.xyz/blog/dash-clientside-treesitter.html).
+TL;DR, having more than tens of callbacks in a second location makes it very annoying 
+to be confident that the signature of your javascript function matches your `Input/Output/State`s.
 
-## Configuration
+## Installation
+I am working on getting this published in the extension marketplace---stay tuned.
+Until such a time, you can clone this repository, and run [`$ vsce package`](https://code.visualstudio.com/api/working-with-extensions/publishing-extension)
+to create a binary that can be installed via the right-click menu in the file tree.
 
-This extension does not come with any built-in parsers.
-To use your own parser, you need to specify its location
-and the location of the query files on the file system in the `settings.json`.
-For each language that you want to parse,
-a dictionary with the following keys needs to be added.
+## Configuration Gotchas
+If none of these sound like you, please open an issue with a list of the plugins you 
+have installed, as well as any relevant configuration.
 
-|Key        |Description                                                    |
-|-----------|---------------------------------------------------------------|
-|lang       |The language identifier                                        |
-|parser     |The path to your parser's WASM file                            |
-|highlights |The path to the file with your highlighting queries.           |
-|injections |The path to the file with your injection queries. (optional)   |
+- [nothing happened after I installed this plugin!](#color-schemes)
+- [the inline highlights disappeared after a few seconds](#pylance)
 
-Note, that this extension uses the WASM bindings for the Tree-sitter parsers.
-Have a look 
-[here](https://github.com/tree-sitter/tree-sitter/blob/master/lib/binding_web/README.md#generate-wasm-language-files)
-to see how you can generate those.
+### Color Schemes
+This plugin works by providing a `DocumentSemanticTokensProvider`. In order to use it,
+you must be using a color scheme that supports semantic token highlighting by default, or enable it.
 
-```json
-"tree-sitter-vscode.languageConfigs": [
-    {
-        "lang": "xyz",
-        "parser": "/path/to/your/tree-sitter-xyz.wasm",
-        "highlights": "/path/to/your/highlights.scm",
-        "injections": "/path/to/your/injections.scm"
-    }
-]
-```
+You can enable semantic token highlighting by searching for `semantic highlighting` in the preferences
+menu, and setting the value of the dropdown to `true`.
 
-### Changing the activation event
+### Pylance
+This plugin doesn't work with `pylance` right now, and might never.
+`pylance` is also a semantic tokens provider, and Microsoft, in their infinite 
+wisdom, does not provide an option to [disable semantic highlighting in pylance](https://github.com/microsoft/pylance-release/issues/2495),
+or to specify [precedence for conflicting providers in VS Code](https://github.com/microsoft/vscode/issues/145530).
+Since `pylance` is a large extension, it usually takes longer to load, it will generally override 
+any provisions of this extension.
 
-I am no clairvoyant (unfortunately)
-and therefore don't know which languages you want to use this extension with.
-This is why, by default, this extension will be activated on any language
-(though parsing will only be performed on configured languages).
-If you want to change that behavior, you need to modify this extension's `package.json`
-in the extensions folder of VSCode (Command _Extensions: Open Extension Folder_).
-(There is no dynamic way, as far as I know.)
-Just go ahead and change the `"activationEvents"` array to what you would prefer.
-For example, the following would trigger the extension only,
-if a file of the language `xyz` is open.
-
-```json
-"activationEvents": [
-    "onLanguage:xyz"
-]
-```
-
-## Injecting other languages
-
-Queries inside the injections file will be parsed and highlighted
-by the parser with the same name as the query.
-So, to highlight something as Python code, the following query is sufficient:
-
-```scheme
-(my-query) @python
-```
-
-However, the standard way of injecting other languages with Tree-sitter is not yet supported.
-
-## Adding custom languages to VSCode
-
-Unfortunately, I haven't been able to figure out a way
-to add custom languages to VSCode natively.
-As far as I know, this is only possible through plugins,
-which need to specify the language details.
-
-If you don't want to write your own plugin, however,
-you can use the following hack.
-Just go to the extensions folder of VSCode (Command _Extensions: Open Extension Folder_)
-and modify an existing extensions' `package.json` file (e. g. this extensions').
-In the `"contributes"` section, add the `"languages"` key with your language details.
-
-```json
-"languages": [
-    {
-        "id": "xyz",
-        "extensions": [
-            ".xyz"
-        ]
-    }
-]
-```
+If you can live without pylance's implementation of semantic token highlighting (if you can't,
+why are you here?), I would recommend [`pyright`](https://github.com/microsoft/pyright) the `chromium`
+to `pylance`'s `chrome`. It is missing a few other features surrounding module-level renames, but I use it daily
+and find it quite feature complete.
+Worst case, you can always disable pyright when you're working on clientside callbacks, and enable it at all other times.
