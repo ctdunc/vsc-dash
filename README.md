@@ -10,7 +10,7 @@ as well as some mildly adjusted highlights and injections. It is based on my [ne
 which provides similar functionality.
 
 I also don't really use VS Code. I am packaging this for the benefit of my coworkers who do, and would
-welcome contributions/support from anyone who does end up using 
+welcome feedback/support from anyone who does end up using it.
 
 - [Why not just use `assets/**/*.js`?](#why-not-just-use-assetsjs)
 - [Installation](#installation)
@@ -25,9 +25,10 @@ TL;DR, having more than tens of callbacks in a second location makes it very ann
 to be confident that the signature of your javascript function matches your `Input/Output/State`s.
 
 ## Installation
-I am working on getting this published in the extension marketplace---stay tuned.
-Until such a time, you can clone this repository, and run [`$ vsce package`](https://code.visualstudio.com/api/working-with-extensions/publishing-extension)
-to create a binary that can be installed via the right-click menu in the file tree.
+You can install `vsc-dash` from the [VS Code marketplace](https://marketplace.visualstudio.com/items?itemName=ctdunc.vsc-dash).
+
+Alternately, you can clone this repository, and run [`$ vsce package`](https://code.visualstudio.com/api/working-with-extensions/publishing-extension)
+to create a `.vsix` binary that can be installed via the right-click menu in the file tree.
 
 ## Configuration Gotchas
 If none of these sound like you, please open an issue with a list of the plugins you 
@@ -53,6 +54,6 @@ any provisions of this extension.
 
 If you can live without pylance's implementation of semantic token highlighting (if you can't,
 why are you here?), I would recommend [`pyright`](https://github.com/microsoft/pyright) the `chromium`
-to `pylance`'s `chrome`. It is missing a few other features surrounding module-level renames, but I use it daily
+to `pylance`'s `chrome`. It is missing a few other features (e.g. module rename code actions), but I use it daily
 and find it quite feature complete.
 Worst case, you can always disable pyright when you're working on clientside callbacks, and enable it at all other times.
