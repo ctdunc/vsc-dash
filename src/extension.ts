@@ -219,8 +219,7 @@ function parseConfigs(configs: any): Config[] {
 }
 
 export function activate(context: vscode.ExtensionContext) {
-	vscode.window.showInformationMessage("loading dash extension!");
-	const rawConfigs = vscode.workspace.getConfiguration("tree-sitter-vscode").get("languageConfigs");
+	const rawConfigs = vscode.workspace.getConfiguration("vsc-dash").get("languageConfigs");
 	const configs = parseConfigs(rawConfigs);
 	const languageMap = configs.map(config => { return { language: config.lang }; });
 	const provider = vscode.languages.registerDocumentSemanticTokensProvider(

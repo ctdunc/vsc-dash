@@ -1,16 +1,16 @@
 {
-  "name": "tree-sitter-vscode",
-  "displayName": "tree-sitter-vscode",
-  "description": "Tree-sitter integration into VSCode",
+  "name": "vsc-dash",
+  "displayName": "VSC Dash",
+  "description": "Better syntax highlighting for Dash app development",
   "author": {
-    "name": "AlecGhost",
-    "url": "https://github.com/AlecGhost"
+    "name": "ctdunc",
+    "url": "https://github.com/ctdunc"
   },
-  "publisher": "AlecGhost",
+  "publisher": "ctdunc",
   "version": "0.0.1",
   "license": "Apache-2.0",
   "repository": {
-    "url": "https://github.com/AlecGhost/tree-sitter-vscode"
+    "url": "https://github.com/ctdunc/vsc-dash"
   },
   "engines": {
     "vscode": "^1.87.0"
@@ -26,9 +26,9 @@
   "contributes": {
     "configuration": [
       {
-        "title": "tree-sitter-vscode config",
+        "title": "vsc-dash config",
         "properties": {
-          "tree-sitter-vscode.languageConfigs": {
+          "vsc-dash.languageConfigs": {
             "description": "A list of objects with the keys \"lang\", \"parser\" and \"highlights\". Optionally, \"injections\" can be added.",
             "type": "array",
             "default": [
@@ -79,11 +79,11 @@
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
     "webpack": "^5.90.3",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "vscode": "^1.1.37"
   },
   "dependencies": {
     "@vscode/vsce": "^2.24.0",
-    "vscode": "^1.1.37",
     "web-tree-sitter": "^0.21.0"
   }
 }
