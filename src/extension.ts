@@ -145,9 +145,11 @@ class SemanticTokensProvider implements vscode.DocumentSemanticTokensProvider {
 				const lang = capture.name;
 				const config = this.configs.find(config => config.lang === lang);
 				if (config !== undefined) {
+					console.log("trying to inject", lang, this.tsLangs);
 					if (!(lang in this.tsLangs)) {
 						this.tsLangs[lang] = await initLanguage(config);
 					}
+					console.log(this.tsLangs);
 					const { parser, highlightQuery, injectionQuery } = this.tsLangs[lang];
 					const captureText = text.substring(capture.node.startIndex, capture.node.endIndex);
 					const tree = parser.parse(captureText);
