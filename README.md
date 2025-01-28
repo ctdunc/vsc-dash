@@ -12,12 +12,22 @@ which provides similar functionality.
 I also don't really use VS Code. I am packaging this for the benefit of my coworkers who do, and would
 welcome feedback/support from anyone who does end up using it.
 
+- [Feautres](#features)
 - [Why not just use `assets/**/*.js`?](#why-not-just-use-assetsjs)
 - [Installation](#installation)
 - [Configuration Gotchas](#configuration-gotchas)
     - [Color Schemes](#color-schemes)
     - [Pylance](#pylance)
 
+## Features
+- JavaScript Syntax Highlighting in clientside_callbacks. See the blog post.
+- JavaScript Syntax Highlighting in dicts where they key is function. This is very useful when dealing with inline value formatters/renderers using ag-grid.
+
+#### Before `vsc-dash`
+![vsc-dash-before](https://github.com/user-attachments/assets/eb4dc61c-8adf-4590-b95a-9b6460194756)
+
+#### After `vsc-dash`
+![vsc-dash-after](https://github.com/user-attachments/assets/35df7bc7-9472-4759-b131-01665565edc1)
 
 ## Why not just use `assets/**/*.js`?
 I wrote about this in a [blog post](https://www.connorduncan.xyz/blog/dash-clientside-treesitter.html).
